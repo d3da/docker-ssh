@@ -62,10 +62,7 @@ if [ -z "${CLIENT_AUTHORIZED_KEYS}" ]; then
     log_with_timestamp "CLIENT_AUTHORIZED_KEYS is not set. Exiting..."
     exit 1
 else
-    # Split the CLIENT_AUTHORIZED_KEYS variable by semicolon and add each to authorized_keys
-    echo "${CLIENT_AUTHORIZED_KEYS}" | tr ',' '\n' | while IFS= read -r key; do
-        echo "${key}" >>"${HOME}/.ssh/authorized_keys"
-    done
+    echo "${CLIENT_AUTHORIZED_KEYS}" > "${HOME}/.ssh/authorized_keys"
     chmod 600 "${HOME}/.ssh/authorized_keys"
 fi
 

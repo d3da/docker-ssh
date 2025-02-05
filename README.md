@@ -21,7 +21,7 @@ The server image supports the following environment variables:
 | `SERVER_ED25519_PRIVATE_KEY_FILE` <br> _required_ | Path to the server's host private key (ed25519). The client needs to have the corresponding public key in `known_hosts`. |
 | `SERVER_ED25519_PRIVATE_KEY_BASE64`               | Alternative to `SERVER_ED25519_PRIVATE_KEY_FILE` (base64-encoded value).                                                 |
 | `SERVER_ED25519_PUBLIC_KEY`                       | The server's host public key (ed25519).                                                                                  |
-| `CLIENT_AUTHORIZED_KEYS` <br> _required_          | The client public keys authorized to connect. The keys should be separated by commas (`,`).                              |
+| `CLIENT_AUTHORIZED_KEYS` <br> _required_          | The client public keys authorized to connect. Multiple keys should be separated by newlines.                             |
 
 #### SSHD options
 
@@ -160,7 +160,9 @@ services:
       - key1
     environment:
       SERVER_ED25519_PRIVATE_KEY_FILE: /run/secrets/key1
-      CLIENT_AUTHORIZED_KEYS: ... value of key2.pub ...
+      CLIENT_AUTHORIZED_KEYS: |
+        ... value of key2.pub ...
+        ... other key ...
       SSHD_ALLOW_TCP_FORWARDING: remote
       SSHD_PERMIT_LISTEN: 127.0.0.1:4444
 
@@ -240,7 +242,9 @@ services:
       - key1
     environment:
       SERVER_ED25519_PRIVATE_KEY_FILE: /run/secrets/key1
-      CLIENT_AUTHORIZED_KEYS: ... value of key2.pub ...
+      CLIENT_AUTHORIZED_KEYS: |
+        ... value of key2.pub ...
+        ... other key ...
       SSHD_FORCE_COMMAND: rsync --server --daemon --config=/etc/rsyncd.conf .
     volumes:
       - ./rsyncd.conf:/etc/rsyncd.conf:ro
