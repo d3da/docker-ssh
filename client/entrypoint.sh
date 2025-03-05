@@ -1,12 +1,12 @@
 #!/bin/sh
 
-log_with_timestamp() {
-    echo -e "$1" | awk '{ "date -Iseconds" | getline d; print "["d"]", $0 }'
+log() {
+    echo -e "$@"
 }
 
 # Ensure the script is not run by the "root" user.
 if [ "$(id -u)" == "0" ]; then
-    log_with_timestamp "This image should not be run as the 'root' user. Exiting..."
+    log "This image should not be run as the 'root' user. Exiting..."
     exit 1
 fi
 
@@ -22,13 +22,13 @@ export LD_PRELOAD=/usr/lib/libnss_wrapper.so NSS_WRAPPER_PASSWD=/tmp/passwd NSS_
 mkdir -p "${HOME}/.ssh"
 chmod -R 700 "${HOME}"
 
-log_with_timestamp "\033[1;34mWelcome to docker-ssh/client!\033[0m"
-log_with_timestamp "\033[1;32m   Alpine: \033[0m $(cat /etc/alpine-release)"
-log_with_timestamp "\033[1;32m  OpenSSH: \033[0m $(ssh -V 2>&1)"
-log_with_timestamp "\033[1;32m    Rsync: \033[0m $(rsync --version | head -n 1)"
+log "\033[1;34mWelcome to docker-ssh/client!\033[0m"
+log "\033[1;32m   Alpine: \033[0m $(cat /etc/alpine-release)"
+log "\033[1;32m  OpenSSH: \033[0m $(ssh -V 2>&1)"
+log "\033[1;32m    Rsync: \033[0m $(rsync --version | head -n 1)"
 
 if [ -z "${SSH_HOSTNAME}" ]; then
-    log_with_timestamp "SSH_HOSTNAME is not set. Exiting..."
+    log "SSH_HOSTNAME is not set. Exiting..."
     exit 1
 fi
 
@@ -40,18 +40,18 @@ if [ -n "${CLIENT_ED25519_PRIVATE_KEY_FILE}" ]; then
         if [ "${CLIENT_ED25519_PRIVATE_KEY_FILE}" != "${HOME}/.ssh/id_ed25519" ]; then
             cp "${CLIENT_ED25519_PRIVATE_KEY_FILE}" "${HOME}/.ssh/id_ed25519"
             chmod 600 "${HOME}/.ssh/id_ed25519"
-            log_with_timestamp "Installed private key from key file."
+            log "Installed private key from key file."
         fi
     else
-        log_with_timestamp "'${CLIENT_ED25519_PRIVATE_KEY_FILE}' is not readable. Exiting..."
+        log "'${CLIENT_ED25519_PRIVATE_KEY_FILE}' is not readable. Exiting..."
         exit 1
     fi
 elif [ -n "${CLIENT_ED25519_PRIVATE_KEY_BASE64}" ]; then
     echo "${CLIENT_ED25519_PRIVATE_KEY_BASE64}" | base64 -d >"${HOME}/.ssh/id_ed25519"
     chmod 600 "${HOME}/.ssh/id_ed25519"
-    log_with_timestamp "Installed private key from env var."
+    log "Installed private key from env var."
 else
-    log_with_timestamp "No private key provided. Exiting..."
+    log "No private key provided. Exiting..."
     exit 1
 fi
 
@@ -63,7 +63,7 @@ if [ -n "${SERVER_ED25519_PUBLIC_KEY}" ]; then
     fi
     chmod 600 "${HOME}/.ssh/known_hosts"
 else
-    log_with_timestamp "SERVER_ED25519_PUBLIC_KEY is not set. Exiting..."
+    log "SERVER_ED25519_PUBLIC_KEY is not set. Exiting..."
     exit 1
 fi
 
@@ -102,10 +102,10 @@ export AUTOSSH_POLL="${AUTOSSH_POLL:-30}"
 # run/schedule the command     #
 ################################
 if [ -n "${SCHEDULE}" ]; then
-    log_with_timestamp "Scheduling command..."
+    log "Scheduling command..."
     echo "${SCHEDULE} ${SCHEDULE_CMD}" >"${HOME}/crontab"
     exec supercronic "${HOME}/crontab"
 else
-    log_with_timestamp "Running $1..."
-    exec "$@" 2>&1 | awk '{ cmd="date -Iseconds"; cmd | getline d; close(cmd); print "["d"]", $0 }'
+    log "Running $1..."
+    exec "$@"
 fi
