@@ -134,14 +134,31 @@ By default, TCP forwarding is disabled in the server image.
 To enable port forwarding,
 you need to set the `SSHD_ALLOW_TCP_FORWARDING` environment variable
 to `remote`, `local` or `all`, depending on the type(s) of port forwarding you want to allow.
-When enabling TCP forwarding,
-also set `SSHD_PERMIT_LISTEN` or `SSHD_PERMIT_OPEN` option (or both) to restrict the port forwarding.
 
 You can learn more about remote and local forwarding by reading `RemoteForward` and `LocalForward`
 sections in [`ssh_config(5)`].
 Here is a simple cheatsheet:
 
 ![SSH port forwarding cheatsheet](docs/ssh-port-forwarding.png)
+
+> [!WARNING]
+> When enabling TCP forwarding, make sure to restrict the port forwarding to specific addresses and ports for better security.
+> - In remote forwarding, set `SSHD_PERMIT_LISTEN` to specify the addresses/ports on which the port forwarding may listen.
+> - In local forwarding, set `SSHD_PERMIT_OPEN` to specify the destinations to which port forwarding is permitted.
+
+> [!TIP]
+> Instead of setting `SSHD_PERMIT_LISTEN` or `SSHD_PERMIT_OPEN`, you can enforce these restrictions individually for each key within `CLIENT_AUTHORIZED_KEYS`. This approach provides greater flexibility, allowing you to tailor settings for specific keys.
+>
+> Example:
+>
+> ```yaml
+> CLIENT_AUTHORIZED_KEYS: |
+>   permitlisten="127.0.0.1:4444",permitopen="_none:1" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIArfzpYuzs3QN24Xba8SIX3tcC7MMo0/Z4jAiXf1yhFO my-key-1
+>   permitlisten="_none:1",permitopen="127.0.0.1:6666" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINdtJ57/bklh9Qdz/ZJ58RrU3dTTBOtHP0eeZv6W3Ha6 my-key-2
+> ```
+>
+> For more information, read [Authorized Keys file format](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT)
+> from [`sshd(8)`].
 
 In the following example, both client and server containers are run on the same host.
 But in a real-world scenario,
@@ -279,7 +296,8 @@ secrets:
 
 <!--------------------------------------------------------------------->
 
-[`sshd_config(5)`]: https://linux.die.net/man/5/sshd_config
-[`ssh_config(5)`]: https://linux.die.net/man/5/ssh_config
+[`sshd(8)`]: https://man.openbsd.org/sshd
+[`sshd_config(5)`]: https://man.openbsd.org/sshd_config
+[`ssh_config(5)`]: https://man.openbsd.org/ssh_config
 [`rsyncd.conf(5)`]: https://download.samba.org/pub/rsync/rsyncd.conf.5
 [cronexpr]: https://github.com/aptible/supercronic/tree/master/cronexpr
