@@ -73,7 +73,7 @@ fi
 printf "\
 Hostname ${SSH_HOSTNAME}
 Port ${SSH_PORT:-22}
-User sshuser
+User ${SSH_USER:-sshuser}
 ServerAliveInterval ${SSH_SERVER_ALIVE_INTERVAL:-10}
 ServerAliveCountMax ${SSH_SERVER_ALIVE_COUNT_MAX:-3}
 ExitOnForwardFailure ${SSH_EXIT_ON_FORWARD_FAILURE:-yes}

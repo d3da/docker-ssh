@@ -70,16 +70,17 @@ The client image supports the following environment variables:
 
 For more information, see the [`ssh_config(5)`] manual.
 
-| Environment Variable          | ssh_config Option    | Default |
-| ----------------------------- | -------------------- | ------- |
-| `SSH_HOSTNAME` _required_     | Hostname             | -       |
-| `SSH_PORT`                    | Port                 | `22`    |
-| `SSH_REMOTE_FORWARD`          | RemoteForward        | -       |
-| `SSH_LOCAL_FORWARD`           | LocalForward         | -       |
-| `SSH_SERVER_ALIVE_INTERVAL`   | ServerAliveInterval  | `10`    |
-| `SSH_SERVER_ALIVE_COUNT_MAX`  | ServerAliveCountMax  | `3`     |
-| `SSH_EXIT_ON_FORWARD_FAILURE` | ExitOnForwardFailure | `yes`   |
-| `SSH_SESSION_TYPE`            | SessionType          | `none`  |
+| Environment Variable          | ssh_config Option    | Default   |
+| ----------------------------- | -------------------- | --------- |
+| `SSH_HOSTNAME` _required_     | Hostname             | -         |
+| `SSH_PORT`                    | Port                 | `22`      |
+| `SSH_USER`                    | User                 | `sshuser` |
+| `SSH_REMOTE_FORWARD`          | RemoteForward        | -         |
+| `SSH_LOCAL_FORWARD`           | LocalForward         | -         |
+| `SSH_SERVER_ALIVE_INTERVAL`   | ServerAliveInterval  | `10`      |
+| `SSH_SERVER_ALIVE_COUNT_MAX`  | ServerAliveCountMax  | `3`       |
+| `SSH_EXIT_ON_FORWARD_FAILURE` | ExitOnForwardFailure | `yes`     |
+| `SSH_SESSION_TYPE`            | SessionType          | `none`    |
 
 #### Autossh options
 
